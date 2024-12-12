@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{study.name}}</title>
+    <link rel="stylesheet" href="{% static 'css/edit.css' %}">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="main-wrapper">
+            <div class="head">
+                Edit <u>{{study.name}}</u>
+            </div>
+            <form method="post">{% csrf_token %}
+                <label class="inp-group" for="s-name">
+                    Study Name:
+                    <input type="text" required maxlength="20" minlength="4" name="s-name" id="s-name" value="{{study.name}}">
+                </label>
+                <label for="s-name" class="inp-group">
+                    Study Phase:
+                    <select name="s-phase" id="phase" onchange="selectUpdate()">
+                        <option style="background-color: transparent;color: transparent;" disabled selected>{{study.phase.name}}</option>
+                        <optgroup label="Existing Phases" style="background-color: orange;">
+                            {% for phase in phases %}
+                            <option value="{{phase.id}}" style="background-color: rgb(255, 202, 104);">{{phase.name}}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="New Phase" style="background-color: hsl(120, 100%, 25%);">
+                            <option value="new" style="background-color: hsl(120, 50%, 60%);"> + Create Phase</option>
+                        </optgroup>
+                    </select>
+                </label>
+                <div class="new-wrapper" id="phase-new-wrapper" data-open="no">
+                    <div class="new">
+                        <label for="">
+                            New Phase Name : 
+                            <input type="text" name="new-phase">
+                        </label>
+                    </div>
+                </div>
+                <label for="s-name" class="inp-group">
+                    Sponser Name:
+                    <select name="s-sponser" id="sponserSelect" onchange="selectUpdate()">
+                        <option style="background-color: transparent;color: transparent;" disabled selected>{{study.sponser.name}} - {{study.sponser.contact}}</option>
+                        <optgroup label="Existing Sponsers" style="background-color: orange;">{% for sponser in sponsers %}
+                        <option value="{{sponser.id}}" style="background-color: rgb(255, 198, 93);">{{sponser.name}} - {{sponser.contact}}</option>
+                        {% endfor %}</optgroup>
+                        <optgroup label="New Sponser" style="background-color: green;">
+                            <option value="new" style="background-color: hsl(120, 50%, 60%);"> + Create Sponser</option>
+                        </optgroup>
+                    </select>
+                </label>
+                <div class="new-wrapper" id="sponser-new-wrapper" data-open="no">
+                    <div class="new">
+                        <label for="">
+                            New Sponser Name :
+                            <input name="new-sponser-name" type="text">
+                        </label>
+                        <label for="">
+                            New Sponser Contact(Optional): 
+                            <input type="text" name="new-sponser-contact">
+                        </label>
+                    </div>
+                </div>
+                <label for="s-name" class="inp-group">
+                    Study Discription:
+                    <input type="text" maxlength="max" name="discription" id="s-name" value="{{study.discription}}">
+                </label>
+                <div class="buttons">
+                    <a href="{% url 'home' %}" class="cancel-btn">Cancel</a>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script defer>
+
+        function print(s) {
+            console.log(s);
+        }
+
+        selectUpdate();
+
+        function selectUpdate() {
+            const sponserSelect = document.querySelector("#sponserSelect");
+            const phaseSelect = document.querySelector("#phase");
+            const newSponserWrapper = document.querySelector("#sponser-new-wrapper");
+            const newPhaseWrapper = document.querySelector("#phase-new-wrapper");
+
+            if(sponserSelect.value == "new"){
+                newSponserWrapper.dataset.open = "yes";
+                newSponserWrapper.querySelector("input:first-child").required = true
+            }else{
+                newSponserWrapper.querySelector("input:first-child").required = false
+                newSponserWrapper.dataset.open = "no"
+            }
+            
+            if(phaseSelect.value == "new"){
+                newPhaseWrapper.dataset.open = "yes"
+                newPhaseWrapper.querySelector("input:first-child").required = true
+            }else{
+                newPhaseWrapper.dataset.open = "no"
+                newPhaseWrapper.querySelector("input:first-child").required = false
+            }
+
+        }
+
+    </script>
+</body>
+</html>
