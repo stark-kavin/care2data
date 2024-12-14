@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Care2Data</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">Study Management</div>
+        <a href="{% url 'logout' %}" class="logout">
+            Logout
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
+        </a>
+    </nav>
+
+    <div class="main-container">
+        <div class="menu">
+            <div class="studies">
+                {% if studies %}
+                {% if studies|length == 1 %}
+                <div class="number">{{studies|length}}</div>
+                <div class="name">Study</div>
+                {% else %}
+                <div class="number">{{studies|length}}</div>
+                <div class="name">Studies</div>
+                {% endif %}
+                {% else %}
+                <div class="number">0</div>
+                    <div class="name">Studies</div>
+                {% endif %}
+            </div>
+            <a style="text-decoration: none;" class="sponser" href="{% url 'sponser' %}">
+                {% if sponser %}
+                {% if sponser|length == 1 %}
+                <div class="number">{{sponser|length}}</div>
+                <div class="name">Sponser</div>
+                {% else %}
+                <div class="number">{{sponser|length}}</div>
+                <div class="name">Sponsers</div>
+                {% endif %}
+                {% else %}
+                <div class="number">0</div>
+                    <div class="name">Sponser</div>
+                {% endif %}
+            </a>
+            <div class="phases">
+                {% if phase %}
+                {% if phase|length == 1 %}
+                <div class="number">{{phase|length}}</div>
+                <div class="name">Phase</div>
+                {% else %}
+                <div class="number">{{phase|length}}</div>
+                <div class="name">Phases</div>
+                {% endif %}
+                {% else %}
+                <div class="number">0</div>
+                    <div class="name">Phase</div>
+                {% endif %}
+            </div>
+            <a class="restore" href="{% url 'reset' %}" style="color: white;text-decoration: none;">
+                <div class="name">Reset</div>
+            </a>
+            <a class="create" href="{% url 'create' %}" style="text-decoration: none;">
+                <div class="number">+</div>
+                <div class="name">Add New Study</div>
+            </a>
+        </div>
+        <div class="table-container">
+            <form action="" method="post" id="delete-form">
+                <button type="submit" class="delete-btn" data-count="0" id="delete-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg> Delete </button>
+                {% csrf_token %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="all-select-checkbox"></th>
+                            <th>Study Name</th>
+                            <th>Study Phase</th>
+                            <th>Sponser Name</th>
+                            <th>Study Discription</th>
+                            <th>Attachment</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+
+                        {% for study in studies %}
+
+                        <tr>
+                            <td><input type="checkbox" onchange="changeCount()" value="{{study.id}}" name="study"></td>
+                            <td>{{study.name}}</td>
+                            <td>{{study.phase}}</td>
+                            {% if study.sponser %}
+                            <td>{{study.sponser}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            <td>{{study.discription}}</td>
+                            {% if study.attachment %}
+                            <td style="display: flex;justify-content: space-around;">
+                                <a href="{{study.attachment.url}}" target="_blank">Open
+                                </a> 
+                                <a href="{{study.attachment.url}}" target="_blank" download="true">Download</a>
+                            </td>
+                            {% else %}
+                            <td style="text-align: center;">-</td>
+                            {% endif %}
+                            <td><a href="{% url 'edit' study.id %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1.2rem" viewBox="0 -960 960 960" width="1.2rem" fill="#e8eaed"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+                            </a></td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const delete_btn = document.getElementById("delete-btn");
+        const allCheckBox = document.querySelectorAll("#table-body input[type=checkbox]")
+
+        document.getElementById("all-select-checkbox").addEventListener("change", function () {
+            allCheckBox.forEach(checkbox => {
+                checkbox.checked = document.getElementById("all-select-checkbox").checked;
+            });
+            changeCount()
+        })
+
+        function changeCount() {
+            const allCheckedBox = document.querySelectorAll("#table-body input[type=checkbox]:checked")
+            delete_btn.dataset.count = allCheckedBox.length;
+            
+            if (allCheckBox.length - allCheckedBox.length == 0) {
+                document.getElementById("all-select-checkbox").checked = true;
+            } else {
+                document.getElementById("all-select-checkbox").checked = false;
+            }
+        }
+        
+        document.getElementById('delete-form').addEventListener('submit', function (event) {
+            const isConfirmed = confirm("Do you want to delete studies ?");
+            if (!isConfirmed) {
+                event.preventDefault();
+            }
+        });
+
+        changeCount()
+
+    </script>
+
+</body>
+
+</html>

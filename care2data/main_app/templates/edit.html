@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{study.name}}</title>
+    <link rel="stylesheet" href="{% static 'css/edit.css' %}">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="main-wrapper">
+            <div class="head">
+                Edit <u>{{study.name}}</u>
+            </div>
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="input-group">
+                    Study Name
+                    <input type="text" name="s-name" id="" value="{{study.name}}">
+                </div>
+                {% if error %}
+                <div class="error" style="color: red;">{{error}}</div>
+                {% endif %}
+                <div class="input-group">
+                    Phase
+                    <select name="s-phases" id="">
+                        <option disabled selected>{{study.phase}}</option>
+                        {% for phase in phases %}
+                        <option value="{{phase.id}}">{{phase.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    Sponser
+                    <select name="s-sponser" id="">
+                        <option disabled selected>{{study.sponser.name}} - {{study.sponser.contact}}</option>
+                        {% for sponser in sponsers %}
+                        <option value="{{sponser.id}}">{{sponser.name}} - {{sponser.contact}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    Discription
+                    <input type="text" name="s-discription" id="" value="{{study.discription}}">
+                </div>
+                <div class="file-group">
+                    <input type="hidden" name="attachment-delete" value="" id="attachment-delete">
+                    Attachment <br>
+                    {% if study.attachment %}
+                    <div class="old" data-delete="no" id="old-file">{{study.attachment.name}} <button type="button"
+                            onclick="deleteFile();">🗑️</button></div>
+                    {% endif %}
+                    <div class="new" id="new-file" data-new=""></div>
+                    <input type="file" name="attachment" id="attachment">
+                </div>
+                <a href="{% url 'home' %}" class="cancel">Cancel</a>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function deleteFile() {
+            document.getElementById("old-file").dataset.delete = "yes";
+            document.getElementById("attachment-delete").value = "delete";
+        }
+
+        document.getElementById("attachment").addEventListener("change", function () {
+            document.getElementById("new-file").dataset.new = document.getElementById("attachment").value;
+            document.getElementById("old-file").dataset.delete = "yes";
+            document.getElementById("attachment-delete").value = "delete";
+        });
+
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+    </script>
+</body>
+
+</html>

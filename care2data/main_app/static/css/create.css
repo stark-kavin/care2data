@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0%;
+    padding: 0%;
+    /* outline: 1px solid red; */
+    box-sizing: border-box;
+}
+
+:root {
+    font-family: "poppins", sans-serif;
+}
+
+body {
+    background-color: #282828;
+    background-size: cover;
+    background-position: center center;
+}
+
+.main-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-card {
+    width: min(40rem, 90%);
+    padding: 1rem;
+}
+
+.head {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: .5rem;
+    font-variant: small-caps;
+    color: aquamarine;
+}
+
+.body {
+    margin-top: 2rem;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        label,.input {
+            display: flex;
+            flex-direction: column;
+            gap: .2rem;
+            color: white;
+            font-size: .8rem;
+
+            .error{
+                color: red;
+                margin-top: .2rem;
+                font-size: .7rem;
+                display: flex;
+                align-items: center;
+                gap: .3rem;
+                svg{
+                    height: 1rem;
+                    width: 1rem;
+                    fill: red;
+                }
+            }
+
+            input[type="text"],
+            select{
+                padding: .5rem;
+                background-color: white;
+                border-radius: .5rem;
+                border: 1px solid black;
+            }
+        }
+
+        .file-name:has(.name[data-filename=""]){
+            right: 50%;
+            z-index: -1;
+            transition: right .5s , z-index 0s;
+        }
+        
+        .file-name{
+            position: absolute; 
+            right: 0%;
+            z-index: 0;
+            transition: right .5s , z-index 0s .5s;
+            width: calc( 50% - 1rem );
+            background-color: orange;
+            margin-top: 2rem;
+            border-radius: .3rem;
+            padding: .3rem;
+            color: #282828;
+            display: flex;
+            justify-content: space-between;
+            
+            .name::after{
+                content: attr(data-filename);
+            }
+
+            .clear-file{
+                cursor: pointer;
+                background-color: transparent;
+                border: none;
+                svg{
+                    fill: rgb(0, 0, 0);
+                    height: 100%;
+                    width: 1rem;
+                }
+            }
+        }
+
+        #file-upload-label{
+            all: unset;
+            width: 50%;
+            background-color: white;
+            aspect-ratio: 6 / 4;
+            border-radius: .5rem;
+            color: #282828;
+            padding: 1.3rem;
+            box-sizing: border-box;
+
+            .border{
+                width: 100%;
+                height: 100%;
+                border:3px dashed orange;
+                border-radius: .5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: .5rem;
+                
+                svg{
+                    fill: orange;
+                    height: 2rem;
+                    width: 2rem;
+                }
+                .discription{
+                    width: 80%;
+                    text-align: center;
+                    font-size: .8rem;
+                }
+            }
+
+            input{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0%;
+                top: 0%;
+                opacity: 0;
+            }
+
+        }
+
+        .buttons {
+            width: 100%;
+            display: flex;
+            justify-content: end;
+            margin-top: 1rem;
+            gap: 1rem;
+
+            a,
+            button {
+                padding: .5rem 1rem;
+                font-size: 1rem;
+                text-decoration: none;
+                color: white;
+                border-radius: .4rem;
+                transition: outline .5s, color .3s , box-shadow .3d;
+            }
+
+            a:hover {
+                outline: 1px solid red;
+                color: red;
+                box-shadow: 0px 0px 10px 0px rgb(255, 0, 0);
+            }
+
+            button {
+                background-color: green;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0px 0px 0px 0px rgba(13, 255, 0, 1);
+
+                &:hover {
+                    outline: 1px solid black;
+                    color: rgb(0, 255, 0);
+                    background-color: transparent;
+                    box-shadow: 0px 0px 10px 0px rgba(13, 255, 0, 1);
+                }
+            }
+
+        }
+    }
+
+    form:has(input:invalid) {
+        button {
+            background-color: grey;
+            color: black;
+            opacity: .6;
+
+            &:hover {
+                background-color: grey;
+                color: black;
+                opacity: .6;
+                box-shadow:unset;
+            }
+        }
+    }
+
+}
